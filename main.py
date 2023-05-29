@@ -9,10 +9,6 @@ from levels import level_1, level_2, level_4
 from sprites import Ball, Block, Paddle
 
 
-def check_sides(ball: Ball, blocks: List[Block]) -> List[bool]:
-    return []
-
-
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -20,7 +16,7 @@ pygame.display.set_caption("Breakout!")
 
 paddle = Paddle()
 blocks = pygame.sprite.Group()
-ball = Ball((SCREEN_WIDTH / 2, 600))
+ball = Ball((SCREEN_WIDTH / 2, 600), blocks)
 
 # Load block surfaces
 block_surfs = []
@@ -30,7 +26,7 @@ for i in range(0, 8):
     )
 
 # Create sprites
-y = 120 # 64
+y = 64
 for row in level_4:
     x = 0
     for col in row:
@@ -57,10 +53,6 @@ while True:
 
     if pygame.sprite.collide_rect(ball, paddle):
         ball._speed.y *= -1
-
-    collided_blocks = pygame.sprite.spritecollide(ball, blocks, True)
-    if collided_blocks:
-        pass
 
     # Draw
     blocks.draw(screen)

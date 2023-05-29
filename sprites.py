@@ -15,7 +15,7 @@ class Block(Sprite):
 
 
 class Ball(Sprite):
-    def __init__(self, starting_pos: tuple):
+    def __init__(self, starting_pos: tuple, blocks: Group):
         super().__init__()
 
         self.image: pygame.Surface = pygame.image.load(
@@ -24,6 +24,8 @@ class Ball(Sprite):
         self.rect: pygame.Rect = self.image.get_rect(center=starting_pos)
         self._pos: Vector2 = Vector2(self.rect.topleft)
         self._speed: Vector2 = Vector2(360, 360)
+        self._blocks: Group = blocks
+        self._old_rect = self.rect.copy()
 
     def _move(self, dt):
         self._pos += self._speed * dt
@@ -34,9 +36,19 @@ class Ball(Sprite):
             self._speed.x *= -1
         if self.rect.bottom >= SCREEN_HEIGHT or self.rect.top <= 0:
             self._speed.y *= -1
+    
+    def _check_collision(self, direction: str):
+        if direction == "horizontal":
+            pass
+
+        if direction == "vertical":
+            pass
 
     def update(self, dt: float) -> None:
+        self._old_rect = self.rect.copy()
         self._move(dt)
+        self._check_collision(direction="horizontal")
+        self._check_collision(direction="vertical")
 
 
 class Paddle(Sprite):
