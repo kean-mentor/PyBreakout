@@ -1,0 +1,13 @@
+# Python build process
+*.pyc
+
+# Python Virtualenv
+.venv/
+.virtualenv/
+
+# IDE cache/config directory
+.vscode/
+.idea/
+
+# Other
+__pycache__
