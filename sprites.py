@@ -1,17 +1,38 @@
+from typing import List
 import pygame
 from pygame.math import Vector2
 from pygame.sprite import Sprite, Group
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT
+from config import BLOCK_NORMAL, BLOCK_UNBREAKABLE, SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 class Block(Sprite):
-    def __init__(self, surface, pos: tuple, groups: Group):
+    def __init__(self, block_type: int, pos: tuple, groups: Group):
         super().__init__(groups)
 
-        self.image = surface
+        self._images: List[pygame.Surface] = [
+            pygame.image.load(f"assets/blocks/{block_type:02d}.png").convert_alpha(),
+        ]
+
+        if BLOCK_NORMAL < block_type < BLOCK_UNBREAKABLE:
+            self._images.insert(
+                0,
+                pygame.image.load(
+                    f"assets/blocks/{block_type-BLOCK_NORMAL:02d}.png"
+                ).convert_alpha(),
+            )
+        self._lives: int = 2 if block_type > BLOCK_NORMAL else 1
+        self.image: pygame.Surface = self._images[0]
         self.rect: pygame.Rect = self.image.get_rect(topleft=pos)
-        self.lives = 1
+        self._breakable: bool = block_type < BLOCK_UNBREAKABLE
+
+    def decrease_life(self):
+        if self._breakable:
+            self._lives -= 1
+            if self._lives < 1:
+                self.kill()
+            else:
+                self.image = self._images[1]
 
 
 class Ball(Sprite):
@@ -82,9 +103,7 @@ class Ball(Sprite):
                     self._pos.x = self.rect.x
                     self._speed.x *= -1
 
-                block.lives -= 1
-                if block.lives < 1:
-                    block.kill()
+                block.decrease_life()
 
     def update(self, dt: float) -> None:
         self._old_rect = self.rect.copy()

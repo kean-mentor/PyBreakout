@@ -18,20 +18,13 @@ paddle = Paddle()
 blocks = pygame.sprite.Group()
 ball = Ball((SCREEN_WIDTH / 2, 600), blocks)
 
-# Load block surfaces
-block_surfs = []
-for i in range(0, 8):
-    block_surfs.append(
-        pygame.image.load(f"assets/blocks/{i+1:02d}.png").convert_alpha()
-    )
-
 # Create sprites
 y = 64
-for row in level_4:
+for row in level_2:
     x = 0
     for col in row:
         if col:
-            sprite = Block(block_surfs[col - 1], (x, y), blocks)
+            sprite = Block(col, (x, y), blocks)
         x += 73
     y += 33
 
