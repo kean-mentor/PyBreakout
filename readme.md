@@ -1,5 +1,4 @@
 Plans:
-- ball & block collision detection -> In progress
 - blocks with multiple "lives"
 - game over detection
 - score and lives
@@ -8,4 +7,4 @@ Plans:
 
 Issues:
 - Improvement: check paddle side collision
-- Bug: move ball to outside of the object if overlapping is occures during collision
+- Bug: move ball to outside of the object if overlapping is occures during collision <-- handled for blocks, also need to handle for windows border and paddle

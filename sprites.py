@@ -11,7 +11,7 @@ class Block(Sprite):
 
         self.image = surface
         self.rect: pygame.Rect = self.image.get_rect(topleft=pos)
-        # self.lives = 1
+        self.lives = 1
 
 
 class Ball(Sprite):
@@ -32,23 +32,64 @@ class Ball(Sprite):
         self.rect.x = round(self._pos.x)
         self.rect.y = round(self._pos.y)
 
+        # Screen boundary collision
         if self.rect.left <= 0 or self.rect.right >= SCREEN_WIDTH:
             self._speed.x *= -1
         if self.rect.bottom >= SCREEN_HEIGHT or self.rect.top <= 0:
             self._speed.y *= -1
-    
-    def _check_collision(self, direction: str):
-        if direction == "horizontal":
-            pass
 
-        if direction == "vertical":
-            pass
+    def _handle_block_collision(self):
+        collided_blocks = pygame.sprite.spritecollide(self, self._blocks, False)
+        if collided_blocks:
+            # Magic number +1/-1 at self.rect's position setting is a small
+            # cheat to avoid double direction change (effectively no change) if
+            # two (or an even number of) blocks are hit at the same time. This
+            # way only the first hit initiate the direction change.
+            for block in collided_blocks:
+                # top
+                if (
+                    self.rect.bottom >= block.rect.top
+                    and self._old_rect.bottom <= block.rect.top
+                ):
+                    self.rect.bottom = block.rect.top - 1
+                    self._pos.y = self.rect.y
+                    self._speed.y *= -1
+
+                # bottom
+                if (
+                    self.rect.top <= block.rect.bottom
+                    and self._old_rect.top >= block.rect.bottom
+                ):
+                    self.rect.top = block.rect.bottom + 1
+                    self._pos.y = self.rect.y
+                    self._speed.y *= -1
+
+                # left
+                if (
+                    self.rect.right >= block.rect.left
+                    and self._old_rect.right <= block.rect.left
+                ):
+                    self.rect.right = block.rect.left - 1
+                    self._pos.x = self.rect.x
+                    self._speed.x *= -1
+
+                # right
+                if (
+                    self.rect.left <= block.rect.right
+                    and self._old_rect.left >= block.rect.right
+                ):
+                    self.rect.left = block.rect.right + 1
+                    self._pos.x = self.rect.x
+                    self._speed.x *= -1
+
+                block.lives -= 1
+                if block.lives < 1:
+                    block.kill()
 
     def update(self, dt: float) -> None:
         self._old_rect = self.rect.copy()
         self._move(dt)
-        self._check_collision(direction="horizontal")
-        self._check_collision(direction="vertical")
+        self._handle_block_collision()
 
 
 class Paddle(Sprite):
