@@ -1,8 +1,10 @@
 Plans:
 - blocks with multiple "lives"
+- sounds
 - game over detection
 - score and lives
 - switch level if all block erased
+- effects for unbreakable blocks (?)
 - powerups
 
 Issues:

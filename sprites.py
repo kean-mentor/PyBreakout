@@ -19,7 +19,7 @@ class Ball(Sprite):
         super().__init__()
 
         self.image: pygame.Surface = pygame.image.load(
-            "assets/ball.png"
+            "assets/ball20.png"
         ).convert_alpha()
         self.rect: pygame.Rect = self.image.get_rect(center=starting_pos)
         self._pos: Vector2 = Vector2(self.rect.topleft)
@@ -103,7 +103,7 @@ class Paddle(Sprite):
             center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 40)
         )
         self._pos: Vector2 = Vector2(self.rect.topleft)
-        self._speed: int = 400
+        self._speed: int = 440
         self._moving_left = False
         self._moving_right = False
 
